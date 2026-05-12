@@ -1,0 +1,4 @@
+-keep class org.tensorflow.lite.** { *; }
+-dontwarn org.tensorflow.lite.**
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**
