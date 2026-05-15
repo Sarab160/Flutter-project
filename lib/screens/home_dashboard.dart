@@ -48,7 +48,6 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
-      // ================= APP BAR =================
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
         child: Container(
@@ -101,14 +100,14 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                   ],
                 ),
 
-                const SizedBox(width: 48), // Placeholder to maintain alignment
+                const SizedBox(width: 48), 
               ],
             ),
           ),
         ),
       ),
 
-      // ================= BODY =================
+      
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 120),
         child: Column(
@@ -139,7 +138,7 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
 
             const SizedBox(height: 28),
 
-            // ================= CARDS =================
+        
             DashboardCard(
               icon: Icons.analytics,
               iconBg: Theme.of(context).colorScheme.primaryContainer,
@@ -178,7 +177,6 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
         ),
       ),
 
-      // ================= BOTTOM NAV =================
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(top: 10, bottom: 20),
         decoration: BoxDecoration(
@@ -243,8 +241,6 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
     );
   }
 }
-
-// ================= DASHBOARD CARD =================
 
 class DashboardCard extends StatelessWidget {
   final IconData icon;
