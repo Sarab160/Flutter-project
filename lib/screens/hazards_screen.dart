@@ -3,34 +3,26 @@ import 'package:flutter/material.dart';
 class HazardsScreen extends StatelessWidget {
   const HazardsScreen({super.key});
 
-  // Colors are fetched dynamically using Theme.of(context)
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
-          // BODY
           SingleChildScrollView(
             padding: const EdgeInsets.only(bottom: 120),
             child: Column(
               children: [
                 const SizedBox(height: 110),
-
-                // HERO SECTION
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: _heroSection(context),
                 ),
 
                 const SizedBox(height: 20),
-
-                // CARDS
                 _aqiCard(
                   context: context,
                   title: "Good",
-                  range: "AQI 0 - 50",
                   color: const Color(0xFFD1FAE5),
                   accent: Colors.green,
                   icon: Icons.check_circle,
@@ -44,7 +36,6 @@ class HazardsScreen extends StatelessWidget {
                 _aqiCard(
                   context: context,
                   title: "Moderate",
-                  range: "AQI 51 - 100",
                   color: const Color(0xFFFEF9C3),
                   accent: Colors.orange,
                   icon: Icons.info,
@@ -58,7 +49,6 @@ class HazardsScreen extends StatelessWidget {
                 _aqiCard(
                   context: context,
                   title: "Unhealthy",
-                  range: "AQI 101 - 200",
                   color: const Color(0xFFFFEDD5),
                   accent: Colors.deepOrange,
                   icon: Icons.error,
@@ -72,7 +62,6 @@ class HazardsScreen extends StatelessWidget {
                 _aqiCard(
                   context: context,
                   title: "Hazardous",
-                  range: "AQI 201+",
                   color: const Color(0xFFFEE2E2),
                   accent: Colors.red,
                   icon: Icons.report,
@@ -88,8 +77,6 @@ class HazardsScreen extends StatelessWidget {
                 _environmentalRisks(context),
 
                 const SizedBox(height: 30),
-
-                // HARDWARE SECTION
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: _hardwareSection(context),
@@ -99,18 +86,12 @@ class HazardsScreen extends StatelessWidget {
               ],
             ),
           ),
-
-          // TOP BAR
           _topBar(context),
         ],
       ),
-
-      // BOTTOM NAV
       bottomNavigationBar: _bottomNav(context),
     );
   }
-
-  // ---------------- TOP BAR ----------------
   Widget _topBar(BuildContext context) {
     return Container(
       height: 100,
@@ -151,8 +132,6 @@ class HazardsScreen extends StatelessWidget {
       ),
     );
   }
-
-  // ---------------- HERO ----------------
   Widget _heroSection(BuildContext context) {
     return Container(
       height: 170,
@@ -208,12 +187,9 @@ class HazardsScreen extends StatelessWidget {
       ),
     );
   }
-
-  // ---------------- AQI CARD ----------------
   Widget _aqiCard({
     required BuildContext context,
     required String title,
-    required String range,
     required Color color,
     required Color accent,
     required IconData icon,
@@ -244,11 +220,6 @@ class HazardsScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(range,
-                          style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: accent)),
                       Text(title,
                           style: TextStyle(
                               fontSize: 20,
@@ -305,8 +276,6 @@ class HazardsScreen extends StatelessWidget {
       default: return Icons.circle;
     }
   }
-
-  // ---------------- ENVIRONMENTAL RISKS ----------------
   Widget _environmentalRisks(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -399,30 +368,38 @@ class HazardsScreen extends StatelessWidget {
       ),
     );
   }
-
-  // ---------------- BOTTOM NAV ----------------
   Widget _bottomNav(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 10, bottom: 20),
+      margin: const EdgeInsets.fromLTRB(24, 0, 24, 30),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
-        border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Expanded(child: _navIcon(context, Icons.dashboard_outlined, "/home", false)),
-          Expanded(child: _navIcon(context, Icons.analytics_outlined, "/prediction", false)),
-          Expanded(child: _navIcon(context, Icons.history, "/history", false)),
-          Expanded(child: _navIcon(context, Icons.query_stats, "/insights", false)),
-          Expanded(child: _navIcon(context, Icons.warning_amber_rounded, "/hazards", true)),
-          Expanded(child: _navIcon(context, Icons.person_outline, "/profile", false)),
+          _navIcon(context, Icons.dashboard_rounded, "Home", "/home", false),
+          _navIcon(context, Icons.analytics_rounded, "Predict", "/prediction", false),
+          _navIcon(context, Icons.history_rounded, "History", "/history", false),
+          _navIcon(context, Icons.person_rounded, "Profile", "/profile", false),
         ],
       ),
     );
   }
 
-  Widget _navIcon(BuildContext context, IconData icon, String route, bool active) {
+  Widget _navIcon(BuildContext context, IconData icon, String label, String route, bool active) {
+    final color = active 
+      ? Theme.of(context).colorScheme.primary 
+      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4);
+
     return GestureDetector(
       onTap: () {
         if (!active) {
@@ -432,21 +409,22 @@ class HazardsScreen extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: active ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), size: 26),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: active ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1) : Colors.transparent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 26),
+          ),
           const SizedBox(height: 4),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              route == "/home" ? "Home" : 
-              route == "/prediction" ? "Predict" :
-              route == "/history" ? "History" :
-              route == "/insights" ? "Insights" : 
-              route == "/hazards" ? "Hazards" : "Profile",
-              style: TextStyle(
-                color: active ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
-                fontSize: 10,
-                fontWeight: active ? FontWeight.bold : FontWeight.w500,
-              ),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: active ? FontWeight.bold : FontWeight.w500,
+              color: color,
             ),
           ),
         ],
@@ -454,3 +432,4 @@ class HazardsScreen extends StatelessWidget {
     );
   }
 }
+

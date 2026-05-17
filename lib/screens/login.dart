@@ -91,7 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background glow
           Positioned(
             top: -100,
             left: -100,
@@ -102,18 +101,12 @@ class _LoginScreenState extends State<LoginScreen> {
             right: -100,
             child: GlowEffect(color: Theme.of(context).colorScheme.secondary),
           ),
-
-          // Particle overlay
           const ParticleBackground(),
-
-          // Main UI
           Center(
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-
-                  // Title
                   Text(
                     "Air Sense",
                     style: TextStyle(
@@ -136,8 +129,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   const SizedBox(height: 30),
-
-                  // Glass Card
                   Container(
                     constraints: const BoxConstraints(maxWidth: 420),
                     padding: const EdgeInsets.all(24),
@@ -153,7 +144,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: Column(
                       children: [
-                        // Email
                         _inputField(
                           icon: Icons.mail,
                           hint: "alex.rivera@airsense.com",
@@ -161,8 +151,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
 
                         const SizedBox(height: 20),
-
-                        // Password + Forgot
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -196,8 +184,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
 
                         const SizedBox(height: 30),
-
-                        // Login Button
                         SizedBox(
                           width: double.infinity,
                           height: 56,
@@ -236,8 +222,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
 
                         const SizedBox(height: 24),
-
-                        // Divider
                         Row(
                           children: [
                             Expanded(
@@ -263,16 +247,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
 
                         const SizedBox(height: 24),
-
-                        // Social Login
                         _googleSignInButton(),
                       ],
                     ),
                   ),
 
                   const SizedBox(height: 30),
-
-                  // Signup link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -415,3 +395,4 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
 }
+

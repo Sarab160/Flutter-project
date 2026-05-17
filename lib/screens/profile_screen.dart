@@ -6,8 +6,6 @@ import '../services/auth_service.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  // Colors are fetched dynamically using Theme.of(context)
-
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
@@ -16,16 +14,12 @@ class ProfileScreen extends StatelessWidget {
       body: Stack(
         children: [
           _mainContent(context, user),
-
-          // TOP BAR
           _topBar(context),
         ],
       ),
       bottomNavigationBar: _bottomNav(context),
     );
   }
-
-  // ---------------- MAIN CONTENT ----------------
   Widget _mainContent(BuildContext context, User? user) {
     return SingleChildScrollView(
       padding: const EdgeInsets.only(top: 110, bottom: 40),
@@ -39,8 +33,6 @@ class ProfileScreen extends StatelessWidget {
                 _profileHeader(context, user),
 
                 const SizedBox(height: 20),
-
-                // GRID
                 LayoutBuilder(
                   builder: (context, c) {
                     bool wide = c.maxWidth > 700;
@@ -63,8 +55,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 30),
-
-                // LOGOUT
                 _logoutButton(context),
               ],
             ),
@@ -73,8 +63,6 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-
-  // ---------------- TOP BAR ----------------
   Widget _topBar(BuildContext context) {
     return Container(
       height: 100,
@@ -104,8 +92,6 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-
-  // ---------------- PROFILE HEADER ----------------
   Widget _profileHeader(BuildContext context, User? user) {
     final initials = (user?.displayName?.isNotEmpty == true)
         ? user!.displayName![0].toUpperCase()
@@ -187,8 +173,6 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-
-  // ---------------- CARDS ----------------
   Widget _accountCard(BuildContext context, User? user) {
     return _glassCard(
       context: context,
@@ -256,8 +240,6 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-
-  // ---------------- SMALL WIDGETS ----------------
   Widget _logoutButton(BuildContext context) {
     return GestureDetector(
       onTap: () async {
@@ -290,38 +272,38 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-
-  // ---------------- BOTTOM NAV ----------------
   Widget _bottomNav(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 10, bottom: 20),
+      margin: const EdgeInsets.fromLTRB(24, 0, 24, 30),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
-        border: Border(top: BorderSide(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1))),
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Expanded(
-              child:
-                  _navIcon(context, Icons.dashboard_outlined, "/home", false)),
-          Expanded(
-              child: _navIcon(
-                  context, Icons.analytics_outlined, "/prediction", false)),
-          Expanded(child: _navIcon(context, Icons.history, "/history", false)),
-          Expanded(
-              child: _navIcon(context, Icons.query_stats, "/insights", false)),
-          Expanded(
-              child: _navIcon(
-                  context, Icons.warning_amber_rounded, "/hazards", false)),
-          Expanded(child: _navIcon(context, Icons.person, "/profile", true)),
+          _navIcon(context, Icons.dashboard_rounded, "Home", "/home", false),
+          _navIcon(context, Icons.analytics_rounded, "Predict", "/prediction", false),
+          _navIcon(context, Icons.history_rounded, "History", "/history", false),
+          _navIcon(context, Icons.person_rounded, "Profile", "/profile", true),
         ],
       ),
     );
   }
 
-  Widget _navIcon(
-      BuildContext context, IconData icon, String route, bool active) {
+  Widget _navIcon(BuildContext context, IconData icon, String label, String route, bool active) {
+    final color = active 
+      ? Theme.of(context).colorScheme.primary 
+      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4);
+
     return GestureDetector(
       onTap: () {
         if (!active) {
@@ -331,33 +313,22 @@ class ProfileScreen extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            color: active ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
-            size: 26,
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: active ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1) : Colors.transparent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 26),
           ),
           const SizedBox(height: 4),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              route == "/home"
-                  ? "Home"
-                  : route == "/prediction"
-                      ? "Predict"
-                      : route == "/history"
-                          ? "History"
-                          : route == "/insights"
-                              ? "Insights"
-                              : route == "/hazards"
-                                  ? "Hazards"
-                                  : "Profile",
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: active ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
-                fontSize: 10,
-                fontWeight: active ? FontWeight.bold : FontWeight.normal,
-              ),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: active ? FontWeight.bold : FontWeight.w500,
+              color: color,
             ),
           ),
         ],
@@ -365,8 +336,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
-
-// ---------------- HELPERS ----------------
 class _InfoTile extends StatelessWidget {
   final String t, v;
   const _InfoTile(this.t, this.v);
@@ -404,3 +373,4 @@ class _Toggle extends StatelessWidget {
     );
   }
 }
+

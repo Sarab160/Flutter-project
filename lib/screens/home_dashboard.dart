@@ -113,7 +113,6 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // STATUS
             Text(
               "CURRENT STATUS: OPTIMAL",
               style: TextStyle(
@@ -178,65 +177,68 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
       ),
 
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(top: 10, bottom: 20),
+        margin: const EdgeInsets.fromLTRB(24, 0, 24, 30),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
-          border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
-          boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black.withValues(alpha: 0.05))],
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Expanded(
-              child: BottomNavItem(
-                icon: Icons.dashboard,
-                label: "Home",
-                active: currentIndex == 0,
-                onTap: () => onNavTap(0),
-              ),
-            ),
-            Expanded(
-              child: BottomNavItem(
-                icon: Icons.analytics,
-                label: "Predict",
-                active: currentIndex == 1,
-                onTap: () => onNavTap(1),
-              ),
-            ),
-            Expanded(
-              child: BottomNavItem(
-                icon: Icons.history,
-                label: "History",
-                active: currentIndex == 2,
-                onTap: () => onNavTap(2),
-              ),
-            ),
-            Expanded(
-              child: BottomNavItem(
-                icon: Icons.query_stats,
-                label: "Insights",
-                active: currentIndex == 3,
-                onTap: () => onNavTap(3),
-              ),
-            ),
-            Expanded(
-              child: BottomNavItem(
-                icon: Icons.warning,
-                label: "Hazards",
-                active: currentIndex == 4,
-                onTap: () => onNavTap(4),
-              ),
-            ),
-            Expanded(
-              child: BottomNavItem(
-                icon: Icons.person,
-                label: "Profile",
-                active: false,
-                onTap: () => Navigator.pushNamed(context, '/profile'),
-              ),
-            ),
+            _navItem(Icons.dashboard_rounded, "Home", 0),
+            _navItem(Icons.analytics_rounded, "Predict", 1),
+            _navItem(Icons.history_rounded, "History", 2),
+            _navItem(Icons.person_rounded, "Profile", 5),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _navItem(IconData icon, String label, int index) {
+    bool active = (index == 5) ? false : (currentIndex == index);
+    final color = active 
+      ? Theme.of(context).colorScheme.primary 
+      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4);
+
+    return GestureDetector(
+      onTap: () {
+        if (index == 5) {
+          Navigator.pushNamed(context, '/profile');
+        } else {
+          onNavTap(index);
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: active ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1) : Colors.transparent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 26),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: active ? FontWeight.bold : FontWeight.w500,
+              color: color,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -339,50 +341,3 @@ class DashboardCard extends StatelessWidget {
   }
 }
 
-// ================= BOTTOM NAV ITEM =================
-
-class BottomNavItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool active;
-  final VoidCallback onTap;
-
-  const BottomNavItem({
-    super.key,
-    required this.icon,
-    required this.label,
-    required this.active,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final color = active 
-      ? Theme.of(context).colorScheme.primary 
-      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color),
-          const SizedBox(height: 4),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              label,
-              maxLines: 1,
-              style: TextStyle(
-                fontSize: 10,
-                letterSpacing: 1,
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

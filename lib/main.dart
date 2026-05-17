@@ -18,8 +18,6 @@ import 'services/theme_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Load environment variables from the bundled .env asset before anything else.
   await dotenv.load(fileName: '.env');
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -41,9 +39,7 @@ class _AirSenseAppState extends State<AirSenseApp> {
   @override
   void initState() {
     super.initState();
-    // Monitor authentication state changes globally, but with a slight delay
-    // to allow the SplashScreen to handle the initial landing.
-    Future.delayed(const Duration(seconds: 4), () {
+    Future.delayed(const Duration(seconds: 3), () {
       FirebaseAuth.instance.authStateChanges().listen((user) {
         if (user == null) {
           final context = AirSenseApp.navigatorKey.currentContext;
@@ -108,3 +104,4 @@ class _AirSenseAppState extends State<AirSenseApp> {
     );
   }
 }
+
