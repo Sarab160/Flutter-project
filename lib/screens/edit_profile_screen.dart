@@ -278,19 +278,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       child: Icon(Icons.person_outline, size: 48, color: primary),
                     ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: CircleAvatar(
-                        radius: 20,
-                        backgroundColor: primary,
-                        child: IconButton(
-                          icon: const Icon(Icons.camera_alt,
-                              size: 18, color: Colors.white),
-                          onPressed: () {},
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),

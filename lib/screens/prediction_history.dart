@@ -145,28 +145,38 @@ class PredictionHistoryScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.fromLTRB(24, 0, 24, 30),
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            navItem(context, Icons.dashboard_rounded, "Home", false, '/home', primary, textSecondary),
-            navItem(context, Icons.analytics_rounded, "Predict", false, '/prediction', primary, textSecondary),
-            navItem(context, Icons.history_rounded, "History", true, '/history', primary, textSecondary),
-            navItem(context, Icons.person_rounded, "Profile", false, '/profile', primary, textSecondary),
-          ],
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width > 600 ? 600 : MediaQuery.of(context).size.width - 48,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    navItem(context, Icons.dashboard_rounded, "Home", false, '/home', primary, textSecondary),
+                    navItem(context, Icons.analytics_rounded, "Predict", false, '/prediction', primary, textSecondary),
+                    navItem(context, Icons.history_rounded, "History", true, '/history', primary, textSecondary),
+                    navItem(context, Icons.person_rounded, "Profile", false, '/profile', primary, textSecondary),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -186,14 +196,14 @@ class PredictionHistoryScreen extends StatelessWidget {
         children: [
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             decoration: BoxDecoration(
               color: active ? primary.withValues(alpha: 0.1) : Colors.transparent,
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(20),
             ),
-            child: Icon(icon, color: color, size: 26),
+            child: Icon(icon, color: color, size: 24),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(
             title,
             style: TextStyle(
