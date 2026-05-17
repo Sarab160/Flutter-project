@@ -4,12 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 class HistoryService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  // Collection reference
   CollectionReference get _historyCollection =>
       _firestore.collection('users').doc(_auth.currentUser?.uid).collection('history');
-
-  // Save prediction
   Future<void> savePrediction({
     required String category,
     required double aqiscore,
@@ -27,11 +23,10 @@ class HistoryService {
       'timestamp': FieldValue.serverTimestamp(),
     });
   }
-
-  // Get prediction history
   Stream<QuerySnapshot> getHistoryStream() {
     return _historyCollection
         .orderBy('timestamp', descending: true)
         .snapshots();
   }
 }
+

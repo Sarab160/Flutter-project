@@ -97,7 +97,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background gradient glow
           Positioned(
             top: -120,
             left: -100,
@@ -108,16 +107,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             right: -100,
             child: GlowEffect(color: Theme.of(context).colorScheme.tertiary, opacity: 0.12),
           ),
-
-          // Particle background
           ParticleBackground(color: Theme.of(context).colorScheme.primary),
-
-          // Main content
           Center(
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  // Top bar
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
@@ -177,8 +171,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
 
                   const SizedBox(height: 40),
-
-                  // Glass Card
                   Container(
                     width: 420,
                     padding: const EdgeInsets.all(24),
@@ -215,7 +207,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         const SizedBox(height: 25),
 
                         if (!_isCodeMode) ...[
-                          // Email label
                           Text(
                             "EMAIL ADDRESS",
                             style: TextStyle(
@@ -242,7 +233,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             ),
                           ),
                         ] else ...[
-                          // CODE FIELD
                           _manualField(_codeController, "RESET CODE (oobCode)", Icons.vibration),
                           const SizedBox(height: 15),
                           _manualField(_newPasswordController, "NEW PASSWORD", Icons.lock_outline, obscure: true),
@@ -251,8 +241,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ],
 
                         const SizedBox(height: 25),
-
-                        // Button
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
@@ -288,8 +276,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ),
 
                         const SizedBox(height: 15),
-
-                        // Toggle Mode
                         Center(
                           child: TextButton(
                             onPressed: () => setState(() => _isCodeMode = !_isCodeMode),
@@ -321,8 +307,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   ),
 
                   const SizedBox(height: 30),
-
-                  // Footer text
                   Text(
                     "PRECISION ENVIRONMENTAL MONITORING",
                     style: TextStyle(
@@ -367,4 +351,5 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 }
+
 

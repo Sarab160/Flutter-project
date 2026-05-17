@@ -2,9 +2,6 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
-
-/// Service class that loads the Pure Dart AQI prediction model
-/// and runs inference on user-provided atmospheric data.
 class AqiPredictionService {
   Map<String, dynamic>? _scalerParams;
   Map<String, dynamic>? _labelMapping;
@@ -12,8 +9,6 @@ class AqiPredictionService {
   bool _isLoaded = false;
 
   bool get isLoaded => _isLoaded;
-
-  /// Load the model weights and parameters from assets.
   Future<void> loadModel() async {
     try {
       final scalerJson = await rootBundle.loadString('assets/scaler_params.json');
@@ -33,11 +28,6 @@ class AqiPredictionService {
       rethrow;
     }
   }
-
-  /// Run a prediction.
-  ///
-  /// [features] must contain exactly 4 values: [CO, Ozone, NO2, PM2.5].
-  /// Returns a Map with 'category' and 'probability'.
   Map<String, dynamic> predict(List<double> input) {
     if (!_isLoaded) {
       throw StateError('Model not loaded. Call loadModel() first.');
@@ -45,8 +35,6 @@ class AqiPredictionService {
     if (input.length != 4) {
       throw ArgumentError('Expected 4 features, got ${input.length}');
     }
-
-    // Apply StandardScaler: z = (x - mean) / scale
     List<double> mean = List<double>.from(_scalerParams!['mean']);
     List<double> scale = List<double>.from(_scalerParams!['scale']);
 
@@ -54,8 +42,6 @@ class AqiPredictionService {
     for (int i = 0; i < input.length; i++) {
       current.add((input[i] - mean[i]) / scale[i]);
     }
-
-    // Forward pass through layers
     for (var layer in _modelWeights!) {
       List<dynamic> weights = layer['weights'];
       List<dynamic> biases = layer['biases'];
@@ -68,7 +54,7 @@ class AqiPredictionService {
         for (int i = 0; i < current.length; i++) {
           sum += current[i] * (weights[i][j] as num).toDouble();
         }
-        
+
         if (activation == 'relu') {
           next[j] = math.max(0.0, sum);
         } else {
@@ -81,8 +67,6 @@ class AqiPredictionService {
       }
       current = next;
     }
-
-    // Get index of highest probability
     int maxIdx = 0;
     double maxProb = -1.0;
     for (int i = 0; i < current.length; i++) {
@@ -93,15 +77,12 @@ class AqiPredictionService {
     }
 
     String category = _labelMapping![maxIdx.toString()] ?? "Unknown";
-    
+
     return {
       'category': category,
       'probability': maxProb,
     };
   }
-
-  /// Calculates a numeric AQI score using EPA standard breakpoints.
-  /// Standard formula: I = [(I_high - I_low) / (C_high - C_low)] * (C - C_low) + I_low
   double calculateNumericAqi(List<double> input) {
     if (input.length != 4) return 0.0;
 
@@ -109,14 +90,10 @@ class AqiPredictionService {
     double ozone = input[1];
     double no2 = input[2];
     double pm25 = input[3];
-
-    // Calculate individual AQIs
     double aqiCo = _calculateCoAqi(co);
     double aqiOzone = _calculateOzoneAqi(ozone);
     double aqiNo2 = _calculateNo2Aqi(no2);
     double aqiPm25 = _calculatePm25Aqi(pm25);
-
-    // AQI is the maximum of the individual pollutant indices
     return [aqiCo, aqiOzone, aqiNo2, aqiPm25].reduce(math.max);
   }
 
@@ -170,8 +147,6 @@ class AqiPredictionService {
     double sum = exp.reduce((a, b) => a + b);
     return exp.map((e) => e / sum).toList();
   }
-
-  /// Classify an AQI category into UI info.
   static AqiCategory classifyCategory(String category) {
     switch (category.toLowerCase()) {
       case 'good':
@@ -211,16 +186,12 @@ class AqiPredictionService {
         );
     }
   }
-
-
-  /// Classify a numeric AQI value into a category.
   static AqiCategory classifyAqi(double aqi) {
     if (aqi <= 50) return classifyCategory('good');
     if (aqi <= 100) return classifyCategory('moderate');
     if (aqi <= 200) return classifyCategory('unhealthy');
     return classifyCategory('hazardous');
   }
-
 
   void dispose() {
     _isLoaded = false;
@@ -240,3 +211,5 @@ class AqiCategory {
     required this.icon,
   });
 }
+
+

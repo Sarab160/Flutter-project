@@ -41,8 +41,6 @@ class _SignupScreenState extends State<SignupScreen> {
         email: email,
         password: password,
       );
-      
-      // Update display name
       await credential.user?.updateDisplayName(name);
 
       if (mounted) {
@@ -104,7 +102,6 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background glow (same atmospheric style)
           Positioned(
             top: -120,
             left: -120,
@@ -115,18 +112,12 @@ class _SignupScreenState extends State<SignupScreen> {
             right: -120,
             child: GlowEffect(color: Theme.of(context).colorScheme.tertiary, opacity: 0.1),
           ),
-
-          // Decorative particles
           const ParticleBackground(),
-
-          // Main content
           Center(
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-
-                  // Header
                   Column(
                     children: [
                       Icon(Icons.air, size: 50, color: Theme.of(context).colorScheme.primary),
@@ -152,8 +143,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
 
                   const SizedBox(height: 30),
-
-                  // Glass Card
                   Container(
                     constraints: const BoxConstraints(maxWidth: 420),
                     padding: const EdgeInsets.all(24),
@@ -198,8 +187,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
 
                         const SizedBox(height: 25),
-
-                        // Sign up button
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
@@ -235,8 +222,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
 
                   const SizedBox(height: 20),
-
-                  // Login redirect
                   GestureDetector(
                     onTap: _goToLogin,
                     child: Text(
@@ -249,8 +234,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
 
                   const SizedBox(height: 20),
-
-                   // Social icons
                   _googleSignInButton(),
 
                   const SizedBox(height: 40),
@@ -258,8 +241,6 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ),
           ),
-
-          // Decorative corner glow
           Positioned(
             bottom: -120,
             left: -120,
@@ -282,8 +263,6 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
   }
-
-  // Input field (same style)
   Widget _inputField({
     required String label,
     required IconData icon,
@@ -407,3 +386,4 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
 }
+

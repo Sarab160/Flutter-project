@@ -9,9 +9,6 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  // Theme-aware colors defined in build()
-
-  // CONTROLLERS
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   final _currentPasswordController = TextEditingController();
@@ -24,7 +21,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     final user = FirebaseAuth.instance.currentUser;
-    // Load actual user data from Firebase
     _nameController = TextEditingController(text: user?.displayName ?? "");
     _emailController = TextEditingController(text: user?.email ?? "");
   }
@@ -46,15 +42,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() => _isSaving = true);
 
     try {
-      // 1. Update Display Name in Firebase
       await user.updateDisplayName(_nameController.text.trim());
-
-      // 2. Force reload to update local user object
       await user.reload();
 
       if (!mounted) return;
-
-      // Show success message
       final primary = Theme.of(context).colorScheme.primary;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -72,8 +63,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           margin: const EdgeInsets.all(20),
         ),
       );
-
-      // Return to profile screen
       Navigator.pop(context);
     } catch (e) {
       if (!mounted) return;
@@ -111,14 +100,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() => _isUpdatingPassword = true);
 
     try {
-      // 1. Re-authenticate user
       final credential = EmailAuthProvider.credential(
         email: user.email!,
         password: currentPw,
       );
       await user.reauthenticateWithCredential(credential);
-
-      // 2. Update password
       await user.updatePassword(newPw);
 
       if (mounted) {
@@ -431,3 +417,4 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 }
+

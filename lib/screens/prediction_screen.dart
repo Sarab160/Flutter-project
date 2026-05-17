@@ -12,17 +12,12 @@ class PredictionScreen extends StatefulWidget {
 }
 
 class _PredictionScreenState extends State<PredictionScreen> {
-  // Theme-aware colors defined in build()
-
-  // ── Controllers for the input fields ──
   final _cityController = TextEditingController();
   final _countryController = TextEditingController();
   final _pm25Controller = TextEditingController();
   final _no2Controller = TextEditingController();
   final _coController = TextEditingController();
   final _ozoneController = TextEditingController();
-
-  // ── Prediction state ──
   final AqiPredictionService _predictionService = AqiPredictionService();
   final HistoryService _historyService = HistoryService();
   bool _isModelLoaded = false;
@@ -51,15 +46,11 @@ class _PredictionScreenState extends State<PredictionScreen> {
     setState(() {
       _errorMessage = null;
     });
-
-    // ── Input Cleaning Helper ──
     double? parseClean(String text) {
       final clean = text.replaceAll(RegExp(r'[^0-9.]'), '');
       if (clean.isEmpty) return null;
       return double.tryParse(clean);
     }
-
-    // Parse required features
     final co = parseClean(_coController.text);
     final ozone = parseClean(_ozoneController.text);
     final no2 = parseClean(_no2Controller.text);
@@ -95,8 +86,6 @@ class _PredictionScreenState extends State<PredictionScreen> {
           _isLoading = false;
           _errorMessage = null;
         });
-
-        // Save to History
         _historyService.savePrediction(
           category: categoryName,
           aqiscore: numericAqi,
@@ -127,8 +116,6 @@ class _PredictionScreenState extends State<PredictionScreen> {
     _predictionService.dispose();
     super.dispose();
   }
-
-  // ── Helpers for the result card ──
   String get _aqiDisplay =>
       _predictedCategory != null ? _predictedCategory! : '--';
 
@@ -181,8 +168,6 @@ class _PredictionScreenState extends State<PredictionScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-
-      // ---------------- APP BAR ----------------
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
         elevation: 1,
@@ -229,14 +214,11 @@ class _PredictionScreenState extends State<PredictionScreen> {
           const SizedBox(width: 10),
         ],
       ),
-
-      // ---------------- BODY ----------------
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 24, 20, 120),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // HEADER
             Text(
               "Predict AQI",
               style: TextStyle(
@@ -257,8 +239,6 @@ class _PredictionScreenState extends State<PredictionScreen> {
             ),
 
             const SizedBox(height: 24),
-
-            // RESULT CARD
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
@@ -278,7 +258,6 @@ class _PredictionScreenState extends State<PredictionScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // TOP STATUS
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -372,8 +351,6 @@ class _PredictionScreenState extends State<PredictionScreen> {
                       color: textSecondary,
                     ),
                   ),
-
-                  // Error message
                   if (_errorMessage != null) ...[
                     const SizedBox(height: 12),
                     Container(
@@ -484,8 +461,6 @@ class _PredictionScreenState extends State<PredictionScreen> {
             ),
 
             const SizedBox(height: 24),
-
-            // Model status indicator
             if (!_isModelLoaded)
               Container(
                 padding:
@@ -515,8 +490,6 @@ class _PredictionScreenState extends State<PredictionScreen> {
                   ],
                 ),
               ),
-
-            // INPUT GRID
             GridView.count(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -559,8 +532,6 @@ class _PredictionScreenState extends State<PredictionScreen> {
             ),
 
             const SizedBox(height: 28),
-
-            // PREDICT BUTTON
             SizedBox(
               width: double.infinity,
               height: 60,
@@ -623,34 +594,27 @@ class _PredictionScreenState extends State<PredictionScreen> {
           ],
         ),
       ),
-
-      // ---------------- BOTTOM NAV ----------------
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(
-          top: 10,
-          bottom: 20,
-        ),
+        margin: const EdgeInsets.fromLTRB(24, 0, 24, 30),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.92),
-          border: Border(
-            top: BorderSide(color: Theme.of(context).dividerColor),
-          ),
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 12,
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            navItem(context, Icons.dashboard, "Home", false, '/home', primary, textSecondary),
-            navItem(context, Icons.analytics, "Predict", true, '/prediction', primary, textSecondary),
-            navItem(context, Icons.history, "History", false, '/history', primary, textSecondary),
-            navItem(context, Icons.query_stats, "Insights", false, '/insights', primary, textSecondary),
-            navItem(context, Icons.warning, "Hazards", false, '/hazards', primary, textSecondary),
-            navItem(context, Icons.person, "Profile", false, '/profile', primary, textSecondary),
+            navItem(context, Icons.dashboard_rounded, "Home", false, '/home', primary, textSecondary),
+            navItem(context, Icons.analytics_rounded, "Predict", true, '/prediction', primary, textSecondary),
+            navItem(context, Icons.history_rounded, "History", false, '/history', primary, textSecondary),
+            navItem(context, Icons.person_rounded, "Profile", false, '/profile', primary, textSecondary),
           ],
         ),
       ),
@@ -660,34 +624,34 @@ class _PredictionScreenState extends State<PredictionScreen> {
   Widget navItem(BuildContext context, IconData icon, String title, bool active,
       String route, Color primary, Color textSecondary) {
     final color = active ? primary : textSecondary;
-    return Expanded(
-      child: InkWell(
-        onTap: () {
-          if (!active) {
-            Navigator.pushReplacementNamed(context, route);
-          }
-        },
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color),
-            const SizedBox(height: 4),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 10,
-                  letterSpacing: 1,
-                  fontWeight: FontWeight.w600,
-                  color: color,
-                ),
-              ),
+    return GestureDetector(
+      onTap: () {
+        if (!active) {
+          Navigator.pushReplacementNamed(context, route);
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: active ? primary.withValues(alpha: 0.1) : Colors.transparent,
+              shape: BoxShape.circle,
             ),
-          ],
-        ),
+            child: Icon(icon, color: color, size: 26),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: active ? FontWeight.bold : FontWeight.w500,
+              color: color,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -755,8 +719,6 @@ Generated by Air Sense AI Platform
     );
   }
 }
-
-// ---------------- INPUT FIELD ----------------
 
 class AQIField extends StatelessWidget {
   final String label;
@@ -846,3 +808,4 @@ class AQIField extends StatelessWidget {
     );
   }
 }
+

@@ -6,8 +6,6 @@ import '../services/aqi_prediction_service.dart';
 class PredictionHistoryScreen extends StatelessWidget {
   const PredictionHistoryScreen({super.key});
 
-  // Theme-aware colors defined in build()
-
   String _formatTimestamp(dynamic timestamp) {
     if (timestamp == null) return "Just now";
     if (timestamp is Timestamp) {
@@ -36,8 +34,6 @@ class PredictionHistoryScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-
-      // ---------------- APP BAR ----------------
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
@@ -61,8 +57,6 @@ class PredictionHistoryScreen extends StatelessWidget {
           child: Divider(height: 1, color: outline),
         ),
       ),
-
-      // ---------------- BODY ----------------
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 24, 20, 140),
         child: Column(
@@ -85,8 +79,6 @@ class PredictionHistoryScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-
-            // HISTORY LIST
             StreamBuilder<QuerySnapshot>(
               stream: historyService.getHistoryStream(),
               builder: (context, snapshot) {
@@ -153,29 +145,27 @@ class PredictionHistoryScreen extends StatelessWidget {
           ],
         ),
       ),
-
-      // ---------------- BOTTOM NAV ----------------
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(top: 10, bottom: 20),
+        margin: const EdgeInsets.fromLTRB(24, 0, 24, 30),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
-          border: Border(top: BorderSide(color: outline)),
+          borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 12,
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Expanded(child: navItem(context, Icons.dashboard, "Home", false, '/home', primary, textSecondary)),
-            Expanded(child: navItem(context, Icons.analytics, "Predict", false, '/prediction', primary, textSecondary)),
-            Expanded(child: navItem(context, Icons.history, "History", true, '/history', primary, textSecondary)),
-            Expanded(child: navItem(context, Icons.query_stats, "Insights", false, '/insights', primary, textSecondary)),
-            Expanded(child: navItem(context, Icons.warning, "Hazards", false, '/hazards', primary, textSecondary)),
-            Expanded(child: navItem(context, Icons.person, "Profile", false, '/profile', primary, textSecondary)),
+            navItem(context, Icons.dashboard_rounded, "Home", false, '/home', primary, textSecondary),
+            navItem(context, Icons.analytics_rounded, "Predict", false, '/prediction', primary, textSecondary),
+            navItem(context, Icons.history_rounded, "History", true, '/history', primary, textSecondary),
+            navItem(context, Icons.person_rounded, "Profile", false, '/profile', primary, textSecondary),
           ],
         ),
       ),
@@ -184,7 +174,8 @@ class PredictionHistoryScreen extends StatelessWidget {
 
   Widget navItem(BuildContext context, IconData icon, String title, bool active,
       String route, Color primary, Color textSecondary) {
-    return InkWell(
+    final color = active ? primary : textSecondary;
+    return GestureDetector(
       onTap: () {
         if (!active) {
           Navigator.pushReplacementNamed(context, route);
@@ -193,19 +184,22 @@ class PredictionHistoryScreen extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: active ? primary : textSecondary),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: active ? primary.withValues(alpha: 0.1) : Colors.transparent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 26),
+          ),
           const SizedBox(height: 4),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 11,
-                color: active ? primary : textSecondary,
-                fontWeight: active ? FontWeight.bold : FontWeight.w500,
-              ),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: active ? FontWeight.bold : FontWeight.w500,
+              color: color,
             ),
           ),
         ],
@@ -319,3 +313,4 @@ class HistoryCard extends StatelessWidget {
     );
   }
 }
+

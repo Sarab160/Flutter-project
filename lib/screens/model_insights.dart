@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 class ModelInsightsScreen extends StatelessWidget {
   const ModelInsightsScreen({super.key});
 
-  // Theme-aware colors defined in build()
-
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
@@ -17,7 +15,6 @@ class ModelInsightsScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
-          // BACKGROUND EFFECTS
           Positioned(
             top: -120,
             left: -120,
@@ -45,7 +42,6 @@ class ModelInsightsScreen extends StatelessWidget {
 
           Column(
             children: [
-              // TOP APP BAR
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 50, 20, 16),
                 decoration: BoxDecoration(
@@ -101,15 +97,12 @@ class ModelInsightsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
-              // MAIN CONTENT
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.fromLTRB(20, 24, 20, 140),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // TITLE SECTION
                       Row(
                         children: [
                           Container(
@@ -160,8 +153,6 @@ class ModelInsightsScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
-
-                      // MODEL ACCURACY CARD
                       Container(
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
@@ -230,7 +221,6 @@ class ModelInsightsScreen extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 32),
-                            // CHART
                             Container(
                               height: 192,
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
@@ -265,8 +255,6 @@ class ModelInsightsScreen extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 16),
-
-                      // MODEL ARCHITECTURE CARD
                       Container(
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
@@ -303,8 +291,6 @@ class ModelInsightsScreen extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 16),
-
-                      // DATASET OVERVIEW CARD
                       Container(
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
@@ -352,26 +338,31 @@ class ModelInsightsScreen extends StatelessWidget {
             ],
           ),
 
-          // BOTTOM NAVIGATION
           Positioned(
             left: 0,
             right: 0,
             bottom: 0,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(8, 16, 8, 30),
+              margin: const EdgeInsets.fromLTRB(24, 0, 24, 30),
+              padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
-                border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Expanded(child: _navItem(context, Icons.dashboard_outlined, "Home", "/home", false, primary, textSecondary)),
-                  Expanded(child: _navItem(context, Icons.analytics_outlined, "Predict", "/prediction", false, primary, textSecondary)),
-                  Expanded(child: _navItem(context, Icons.history, "History", "/history", false, primary, textSecondary)),
-                  Expanded(child: _navItem(context, Icons.query_stats, "Insights", "/insights", true, primary, textSecondary)),
-                  Expanded(child: _navItem(context, Icons.warning_amber_rounded, "Hazards", "/hazards", false, primary, textSecondary)),
-                  Expanded(child: _navItem(context, Icons.person_outline, "Profile", "/profile", false, primary, textSecondary)),
+                  _navItem(context, Icons.dashboard_rounded, "Home", "/home", false, primary, textSecondary),
+                  _navItem(context, Icons.analytics_rounded, "Predict", "/prediction", false, primary, textSecondary),
+                  _navItem(context, Icons.history_rounded, "History", "/history", false, primary, textSecondary),
+                  _navItem(context, Icons.person_rounded, "Profile", "/profile", false, primary, textSecondary),
                 ],
               ),
             ),
@@ -413,6 +404,7 @@ class ModelInsightsScreen extends StatelessWidget {
   }
 
   static Widget _navItem(BuildContext context, IconData icon, String title, String route, bool active, Color primary, Color textSecondary) {
+    final color = active ? primary : textSecondary;
     return GestureDetector(
       onTap: () {
         if (!active) {
@@ -422,19 +414,22 @@ class ModelInsightsScreen extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: active ? primary : textSecondary, size: 26),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: active ? primary.withValues(alpha: 0.1) : Colors.transparent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 26),
+          ),
           const SizedBox(height: 4),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: active ? primary : textSecondary,
-                fontSize: 10,
-                fontWeight: active ? FontWeight.bold : FontWeight.w500,
-              ),
+          Text(
+            title,
+            style: TextStyle(
+              color: color,
+              fontSize: 10,
+              fontWeight: active ? FontWeight.bold : FontWeight.w500,
             ),
           ),
         ],
@@ -463,3 +458,4 @@ class ModelInsightsScreen extends StatelessWidget {
     );
   }
 }
+
